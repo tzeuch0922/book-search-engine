@@ -16,6 +16,11 @@ const resolvers =
 
                 return userData;
             }
+        },
+        test: async(parent, args) =>
+        {
+            console.log("test entered");
+            return {value: "success"};
         }
     },
     Mutation:
@@ -37,6 +42,7 @@ const resolvers =
         },
         addUser: async (parent, args) =>
         {
+            console.log("add-user", args);
             const user = await User.create(args);
             const token = signToken(user);
 
