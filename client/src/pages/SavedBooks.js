@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 // import { getMe, deleteBook } from '../utils/API';
@@ -62,6 +62,7 @@ const SavedBooks = () => {
       // setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
+      window.location.reload();
     } catch (err) {
       console.error(err);
     }
@@ -71,7 +72,7 @@ const SavedBooks = () => {
   if (loading) {
     return <h2>LOADING...</h2>;
   }
-
+  
   return (
     <>
       <Jumbotron fluid className='text-light bg-dark'>

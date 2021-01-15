@@ -11,20 +11,22 @@ const resolvers =
             if(context.user)
             {
                 const userData = await User.findOne({ _id: context.user._id })
-                .select('-__v -password')
-                .populate('savedBooks');
+                .select('-__v -password');
 
                 return userData;
             }
-        },
-        test: async(parent, args) =>
-        {
-            console.log("test entered");
-            return {value: "success"};
         }
     },
     Mutation:
     {
+        addUser: async (parent, args) =>
+        {
+            console.log("add-user", args);
+            const user = await User.create(args);
+            const token = signToken(user);
+
+            return { token, user };
+        },
         login: async (parent, { email, password }) =>
         {
             const user = await User.findOne({ email });
@@ -40,15 +42,7 @@ const resolvers =
             const token = signToken(user);
             return { token, user };
         },
-        addUser: async (parent, args) =>
-        {
-            console.log("add-user", args);
-            const user = await User.create(args);
-            const token = signToken(user);
-
-            return { token, user };
-        },
-        saveBook: async (parent, args, context) =>
+        saveBook: async (parent, args , context) =>
         {
             if(context.user)
             {
@@ -60,11 +54,11 @@ const resolvers =
         {
             if(context.user)
             {
-                const user = await User.findByIdAndUpdate({ _id: context.user.id }, {$pull: { savedBooks: { bookId: args.bookId }}}, { new: true });
+                const user = await User.findByIdAndUpdate({ _id: context.user._id }, {$pull: { savedBooks: { bookId: args.bookId }}}, { new: true });
                 return user;
             }
         }
     }
 };
 
-module.export = resolvers;
+module.exports = resolvers;
